@@ -1,5 +1,6 @@
 package au.id.wale.monty.commandclient
 
+import au.id.wale.monty.util.uploadToHastebin
 import me.devoxin.flight.api.CommandFunction
 import me.devoxin.flight.api.context.Context
 import me.devoxin.flight.api.context.MessageContext
@@ -61,13 +62,7 @@ class ClientListener : CommandEventAdapter {
 
     override fun onCommandError(ctx: Context, command: CommandFunction, error: Throwable) {
         if(error.stackTraceToString().length > 2000) {
-            val request = Request.Builder()
-                .url("https://haste.erisa.uk/documents")
-                .post(error.stackTraceToString().toRequestBody("text/plain; charset=utf8".toMediaType()))
-                .build()
-            val response = client.newCall(request).execute()
-            val json = JSONObject(response.body!!.string())
-            val key = json.getString("key")
+            val key = error.stackTraceToString().uploadToHastebin()
             ctx.send("The command ${command.name} encountered an error: **https://haste.erisa.uk/${key}**")
         } else {
             ctx.send("The command ${command.name} encountered an error. \n " +
@@ -93,13 +88,7 @@ class ClientListener : CommandEventAdapter {
 
     override fun onParseError(ctx: Context, command: CommandFunction, error: Throwable) {
         if(error.stackTraceToString().length > 2000) {
-            val request = Request.Builder()
-                .url("https://haste.erisa.uk/documents")
-                .post(error.stackTraceToString().toRequestBody("text/plain; charset=utf8".toMediaType()))
-                .build()
-            val response = client.newCall(request).execute()
-            val json = JSONObject(response.body!!.string())
-            val key = json.getString("key")
+            val key = error.stackTraceToString().uploadToHastebin()
             ctx.send("The command ${command.name} failed to parse: **https://haste.erisa.uk/${key}**")
         } else {
             ctx.send("The command ${command.name} failed to parse. \n " +
