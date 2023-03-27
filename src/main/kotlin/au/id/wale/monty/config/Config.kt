@@ -12,7 +12,18 @@ data class DatabaseConfig(
     val url: String
 )
 
+data class APIConfig(
+    val openWeatherMap: String,
+    val ptv: PTVAPIConfig
+)
+
+data class PTVAPIConfig(
+    val developerId: String,
+    val developerKey: String
+)
+
 data class Config(
     val discord: DiscordConfig,
-    val db: DatabaseConfig
+    val db: DatabaseConfig,
+    val api: APIConfig
 )

@@ -24,6 +24,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-scripting-dependencies-maven")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
+    implementation("com.google.code.gson:gson:2.10.1")
+
     implementation("net.dv8tion:JDA:5.0.0-beta.6")
     implementation("com.github.Devoxin:Flight:b692e6033d")
     implementation("ch.qos.logback:logback-classic:1.4.6")
