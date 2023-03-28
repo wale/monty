@@ -13,5 +13,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Run build with Gradle Wrapper
         run: ./gradlew build
-      - name: Build shadow JAR
-        run: ./gradlew shadowJar
+      - uses: actions/upload-artifact@v3
+        with:
+            name: monty.jar
+            path: build/libs/monty-*.jar
