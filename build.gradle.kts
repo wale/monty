@@ -4,6 +4,7 @@ plugins {
     kotlin("plugin.serialization") version "1.8.0"
     kotlin("plugin.jpa") version "1.8.0"
     id("io.ebean") version "13.15.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     application
 }
 

@@ -18,7 +18,7 @@ class Time : Cog {
     @Command(description = "Sets the timezone for a user", aliases = ["tz"])
     fun timezone(ctx: Context, @Greedy @Describe("A tzdb-formatted timezone") timezone: String) {
         val isValid = timezone in TimeZone.getAvailableIDs()
-        if (isValid) {
+            if (isValid) {
             val user = QUserEntity().id.eq(ctx.author.idLong).findOneOrEmpty()
             if (user.isEmpty) {
                 val newUser = UserEntity()
