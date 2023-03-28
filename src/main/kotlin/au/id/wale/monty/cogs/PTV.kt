@@ -89,20 +89,19 @@ class PTV : Cog {
                             return
                         } else {
                             val departureType = object : TypeToken<ArrayList<RideSpaceDeparture>>() {}.type
-                            val departureList = gson.fromJson<ArrayList<RideSpaceDeparture>>(depBody, departureType)
+                            var departureList = gson.fromJson<ArrayList<RideSpaceDeparture>>(depBody, departureType)
 
                             val paginator = ButtonEmbedPaginator.Builder()
                                 .setEventWaiter(Constants.eventWaiter)
                                 .setTimeout(2, TimeUnit.MINUTES)
 
-                            // RideSpace trips are sorted by platform (0 = platform 1, 1 = platform 2, etc)
-                            for ((i, platform) in departureList.withIndex()) {
+                            for ((i, destination) in departureList.withIndex()) {
                                 val embed = EmbedBuilder()
                                 embed.setColor(0x0072CE)
                                 embed.setThumbnail("https://upload.wikimedia.org/wikipedia/commons/7/73/Metro_Trains_Melbourne_Logo.png")
-                                embed.setTitle("Trains from ${station.replaceFirstChar { it.uppercase() }}, Platform ${i + 1}")
-                                embed.setDescription("This platform's destination is **${platform.name}**.")
-                                for (trip in platform.trips) {
+                                embed.setTitle("Trains from ${station.replaceFirstChar { it.uppercase() }}")
+                                embed.setDescription("This platform's destination is **${destination.name}**.")
+                                for (trip in destination.trips) {
                                     embed.addField(trip.label, formatTrip(trip), false)
                                 }
                                 embed.setFooter("Retrieved from RideSpace", "https://ridespace.coronavirus.vic.gov.au/assets/icons/apple-touch-icon.png")
@@ -119,6 +118,7 @@ class PTV : Cog {
 
     private fun formatTrip(trip: RideSpaceTrip): String {
         return """
+            Platform **${trip.platform}**
             📅: **${trip.arrivalLabel}**
             Departing in: <t:${trip.departureTime.time / 1000}:R>
             Capacity: **${trip.capacityClass}**
