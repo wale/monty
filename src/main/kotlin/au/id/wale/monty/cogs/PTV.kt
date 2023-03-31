@@ -89,7 +89,7 @@ class PTV : Cog {
                             return
                         } else {
                             val departureType = object : TypeToken<ArrayList<RideSpaceDeparture>>() {}.type
-                            var departureList = gson.fromJson<ArrayList<RideSpaceDeparture>>(depBody, departureType)
+                            val departureList = gson.fromJson<ArrayList<RideSpaceDeparture>>(depBody, departureType)
 
                             val paginator = ButtonEmbedPaginator.Builder()
                                 .setEventWaiter(Constants.eventWaiter)

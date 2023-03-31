@@ -15,5 +15,4 @@ jobs:
         run: ./gradlew build
       - uses: actions/upload-artifact@v3
         with:
-            name: monty.jar
-            path: build/libs/monty-*.jar
+            path: build/libs/monty-*-all.jar

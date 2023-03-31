@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "au.id.wale"
-version = "1.0-SNAPSHOT"
+version = "202205xx"
 
 repositories {
     mavenCentral()
