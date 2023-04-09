@@ -1,4 +1,4 @@
-name: Tagged Release
+name: "Tagged Release"
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 
 jobs:
-  tagged-release:
+  tagged_release:
     name: "Tagged Release"
     runs-on: "ubuntu-latest"
 
