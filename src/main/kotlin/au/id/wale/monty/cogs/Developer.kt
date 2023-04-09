@@ -7,6 +7,7 @@ import me.devoxin.flight.api.annotations.Greedy
 import me.devoxin.flight.api.context.MessageContext
 import me.devoxin.flight.api.entities.Cog
 import java.awt.Color
+import java.io.File
 import javax.script.ScriptEngineManager
 import kotlin.script.experimental.jsr223.KotlinJsr223DefaultScriptEngineFactory
 
@@ -81,4 +82,16 @@ class Developer : Cog {
             }
         }
     }
+
+    /**
+     * todo: implement the command below
+     * @Command(description = "Hot-updates the Monty JAR to the latest build", developerOnly = true)
+    fun hotswitch(ctx: MessageContext) {
+        // This dynamically grabs the location of the JAR, but there are some caveats
+        // This might not work in IntelliJ's runner.
+        val jarFile = File(this::class.java.protectionDomain.codeSource.location.toURI())
+
+        // Get the latest release from GitHub
+        val url = "https://github.com/wale/monty/releases/latest/download/monty-"
+    } **/
 }
