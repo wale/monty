@@ -23,7 +23,6 @@ jobs:
         run: ./gradlew build
 
       - name: Rename output file
-        if: state == "release"
         run: mv "build/libs/monty-*-all.jar" "build/libs/monty.jar"
 
       - uses: "marvinpinto/action-automatic-releases@latest"
