@@ -32,5 +32,5 @@ jobs:
           automatic_release_tag: "nightly"
           prerelease: true
           title: "Monty Nightly Release"
-          files:
-            - build/libs/monty.jar
+          files: |
+            build/libs/monty.jar
