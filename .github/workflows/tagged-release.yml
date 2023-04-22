@@ -3,7 +3,7 @@ name: "Tagged Release"
 on:
   push:
     tags:
-      - '([0-9]){4}\.([0-9]){2}\.([0-9]){2}' # matches [year].[month].[day]
+      - '*.*.*' # matches [year].[month].[day]
 
 
 jobs:
