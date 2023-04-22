@@ -1,3 +1,6 @@
+import java.io.IOException
+
+
 plugins {
     kotlin("jvm") version "1.8.0"
     kotlin("kapt") version "1.8.0"
@@ -5,6 +8,7 @@ plugins {
     kotlin("plugin.jpa") version "1.8.0"
     id("io.ebean") version "13.15.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.github.gmazzo.buildconfig") version "3.1.0"
     application
 }
 
@@ -44,6 +48,8 @@ dependencies {
     }
     implementation("io.ebean:ebean-migration:13.7.0")
 
+    implementation("org.threeten:threeten-extra:1.7.2")
+
     implementation("org.jsoup:jsoup:1.15.4")
     implementation("org.json:json:20230227")
 
@@ -64,4 +70,35 @@ kotlin {
 
 application {
     mainClass.set("au.id.wale.monty.MainKt")
+}
+
+fun String.runCommand(
+    workingDir: File = File(projectDir.toURI()),
+    timeoutAmount: Long = 60,
+    timeoutUnit: TimeUnit = TimeUnit.SECONDS
+): String = ProcessBuilder(split("\\s(?=(?:[^'\"`]*(['\"`])[^'\"`]*\\1)*[^'\"`]*$)".toRegex()))
+    .directory(workingDir)
+    .redirectOutput(ProcessBuilder.Redirect.PIPE)
+    .redirectError(ProcessBuilder.Redirect.PIPE)
+    .start()
+    .apply { waitFor(timeoutAmount, timeoutUnit) }
+    .run {
+        val error = errorStream.bufferedReader().readText().trim()
+        if (error.isNotEmpty()) {
+            throw IOException(error)
+        }
+        inputStream.bufferedReader().readText().trim()
+    }
+
+val gitCommitHash = "git rev-parse --short HEAD".runCommand()
+
+
+buildConfig {
+    className("BuildConfig")
+    packageName("au.id.wale.monty.internal")
+
+    useKotlinOutput()
+
+    buildConfigField("String", "MONTY_VERSION", "\"${project.version}\"")
+    buildConfigField("String", "MONTY_COMMIT", "\"$gitCommitHash\"")
 }

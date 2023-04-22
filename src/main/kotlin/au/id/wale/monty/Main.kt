@@ -14,9 +14,12 @@ import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.requests.GatewayIntent
 
 import org.slf4j.LoggerFactory
+import java.time.Instant
 import java.util.*
 
 private var LOG = LoggerFactory.getLogger("Monty-Main")
+
+var startupTime = Instant.now()
 
 lateinit var config: Config
 lateinit var db: Database
@@ -74,5 +77,6 @@ fun main(args: Array<String>) {
         jda.updateCommands().addCommands(commandClient.commands.toDiscordCommands()).queue()
 
         LOG.info("Connected as ${jda.selfUser.name}#${jda.selfUser.discriminator}!")
+
     }
 }

@@ -1,6 +1,10 @@
 package au.id.wale.monty.cogs
 
 import au.id.wale.monty.Constants
+import au.id.wale.monty.internal.BuildConfig
+import au.id.wale.monty.startupTime
+import au.id.wale.monty.util.calculateUptime
+import au.id.wale.monty.util.formatRAMUsage
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter
 import com.jagrosh.jdautilities.menu.ButtonEmbedPaginator
 import me.devoxin.flight.api.CommandFunction
@@ -133,6 +137,26 @@ class Info : Cog {
                 context.reply("Websocket: `${end - start}ms`, " +
                         "REST: `${context.jda.restPing.complete()}ms`, " +
                         "Gateway: `${context.jda.gatewayPing}ms`")
+            }
+        }
+    }
+
+    @Command(description = "Gets information about the bot")
+    suspend fun info(ctx: Context) {
+        if(ctx.contextType == ContextType.MESSAGE) {
+            val context = ctx.asMessageContext!!
+            val formattedDevs = ctx.commandClient.ownerIds
+                .toSet().joinToString(", ") { "<@$it>" }
+
+            context.send {
+                setTitle("Monty Info")
+                addField("Version", BuildConfig.MONTY_VERSION, false)
+                addField("Commit", BuildConfig.MONTY_COMMIT, false)
+                addField("Developers", formattedDevs, false)
+                addField("Uptime", calculateUptime(startupTime), false)
+                addField("RAM Usage", formatRAMUsage(), false)
+                setThumbnail(context.jda.selfUser.avatarUrl)
+                setColor(ctx.guild?.selfMember?.color ?: Color.getColor("#f37975"))
             }
         }
     }
