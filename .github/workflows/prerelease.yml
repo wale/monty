@@ -23,7 +23,7 @@ jobs:
         run: ./gradlew build
 
       - name: Rename output file
-        run: mv "build/libs/monty-*-all.jar" "build/libs/monty.jar"
+        run: find build/libs -maxdepth 1 -name "*all*" | xargs -I '{}' mv {} build/libs/monty.jar
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
