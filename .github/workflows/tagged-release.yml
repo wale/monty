@@ -2,8 +2,8 @@ name: "Tagged Release"
 
 on:
   push:
-    branches-ignore:
-      - 'nightly'
+    branches:
+      - "master"
     tags:
       - '([0-9]){4}\.([0-9]){2}\.([0-9]){2}' # matches [year].[month].[day]
 
@@ -12,6 +12,7 @@ jobs:
   tagged_release:
     name: "Tagged Release"
     runs-on: "ubuntu-latest"
+    if: "startsWith(github.ref, 'refs/tags/')"
 
     steps:
       - name: Checkout project sources
