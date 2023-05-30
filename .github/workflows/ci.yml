@@ -1,13 +1,12 @@
 name: CI
 
 on:
-  workflow_dispatch:
   pull_request:
   push:
     branches:
-      - main
+      - master
     tags:
-      - v*
+      - '([0-9]){4}\.([0-9]){2}\.([0-9]){2}'
 
 jobs:
   build:
@@ -21,8 +20,21 @@ jobs:
       - name: Run build with Gradle Wrapper
         run: ./gradlew build
 
+  build-nightly:
+    name: "Build JAR with nightly version"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project sources
+        uses: actions/checkout@v2
+      - name: Rename version to nightly
+        run: sed --regexp-extended --in-place 's/([0-9]){4}\.([0-9]){2}\.([0-9]){2}/nightly/' build.gradle.kts
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Run build with Gradle Wrapper
+        run: ./gradlew build
+
   create-nightly-release:
-    needs: build
+    needs: build-nightly
     name: "Create Nightly Release"
     runs-on: ubuntu-latest
     steps:
