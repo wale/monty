@@ -6,6 +6,7 @@ import au.id.wale.monty.entities.ridespace.RideSpaceDeparture
 import au.id.wale.monty.entities.ridespace.RideSpaceTrip
 import au.id.wale.monty.util.await
 import au.id.wale.monty.util.gson.GsonZuluDateAdapter
+import au.id.wale.monty.util.plusAssign
 import au.id.wale.monty.util.toPTVUrl
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -23,7 +24,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
+import java.time.Instant
 import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -100,7 +104,7 @@ class PTV : Cog {
                                 embed.setColor(0x0072CE)
                                 embed.setThumbnail("https://upload.wikimedia.org/wikipedia/commons/7/73/Metro_Trains_Melbourne_Logo.png")
                                 embed.setTitle("Trains from ${station.replaceFirstChar { it.uppercase() }}")
-                                embed.setDescription("This platform's destination is **${destination.name}**.")
+                                embed.setDescription("Trains to **${destination.name}**.")
                                 for (trip in destination.trips) {
                                     embed.addField(trip.label, formatTrip(trip), false)
                                 }
@@ -117,12 +121,23 @@ class PTV : Cog {
     }
 
     private fun formatTrip(trip: RideSpaceTrip): String {
-        return """
-            Platform **${trip.platform}**
-            📅: **${trip.arrivalLabel}**
-            Departing in: <t:${trip.departureTime.time / 1000}:R>
-            Capacity: **${trip.capacityClass}**
-            Platform Capacity: **${trip.platformCapacityClass}**
-        """.trimIndent()
+        val format = StringBuilder()
+        format += if (trip.arrivalLabel == "SCHEDULED") {
+            val minutesBefore = ChronoUnit.MINUTES.between(
+                Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneId.of("Australia/Melbourne")),
+                Instant.ofEpochMilli(trip.departureTime.time).atZone(ZoneId.of("Australia/Melbourne")),
+                )
+            "**Scheduled in**: _${minutesBefore} minutes_"
+        } else {
+            "**Departing in**: <t:${trip.departureTime.time / 1000}:R>"
+        }
+
+        format += if (trip.platform != 0) {
+            "**Platform**: ${trip.platform}"
+        } else {
+            "**Platform**: Unknown"
+        }
+
+        return format.toString()
     }
 }
